@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+{% block stylesheets %}
+<link href="/static/assets/css/style.css" rel="stylesheet" />
+{% endblock stylesheets %}
+
+{% block title %} Recover account {% endblock %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="feather icon-unlock auth-icon"></i>
+                </div>
+                <h3 class="mb-4">استعادة كلمة المرور</h3>
+                <span class="mb-0 text-muted">
+                    {% if msg %}
+                    {{ msg | safe }}
+                    {% else %}
+                    {% endif %}
+                </span>
+                <br />
+                <br />
+                <form role="form" method="post" action="">
+                    {% csrf_token %}
+                    <p class="mb-0 text-muted">ادخل عنوان البريد الالكتروني</p>
+                    <div class="input-group mb-3">
+                        {{ form.email }}
+                    </div>
+                    <span class="text-error">{{ form.email.errors }}</span>
+
+                    <button type="submit" name="recover" class="btn btn-primary shadow-2 mb-4">استعادة</button>
+                </form>
+                <table>
+                    <tr>
+                            <p class="mb-0 text-muted">لا يوجد لديك حساب ؟ <a href="{% url 'register' %}">تسجيل</a></p>
+                    </tr>
+                </table>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,83 @@
+{% extends "layouts/base.html" %}
+{% block title %} Results {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5>النتائج</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-xl-12">
+            <div class="table-responsive">
+               {% if submissions|length >= 1 %}
+               <table class="table table-hover">
+                  <thead>
+                     <tr>
+                        <th style="width:20%">التحدي</th>
+                        <th style="width:20%">العنوان</th>
+                        <th style="width:20%">وقت إرسال الحل</th>
+                        <th style="width:15%">عدد المحاولات</th>
+                        <th style="width:15%">النتيجة</th>
+                     </tr>
+                  </thead>
+                  {% for x in submissions %}
+                  <tbody>
+                     <tr>
+                        {% if x.challenge.belongsToEvent != None %}
+                        <td>{{x.challenge.belongsToEvent.title}}</td>
+                        {% else %}
+                        <td>{{x.challenge.level}}</td>
+                        {% endif %}
+                        <td>{{x.challenge.title|truncatechars:50}}</td>
+                        <td>{{x.solve_date}}</td>
+                        <td>{{x.counter}}</td>
+                        {% if x.challenge.belongsToEvent.is_hackathon == 1 %}
+                        {% if x.result == 100 %}
+                        <td style="font-weight: bold;color:forestgreen">العلم مطابق</td>
+                        {% else %}
+                        <td style="font-weight: bold;color:firebrick"> العلم غير مطابق</td>
+                        {% endif %}
+                        {% else %}
+                        {% if x.status|upper == '0' %}
+                        <td style="font-weight: bold;color:royalblue">جاري التدقيق...</td>
+                        {% elif x.status|upper == '3' %}
+                        <td style="font-weight: bold;"><a a href="{% url 'submission' x.id %}" style="font-weight: bold;">Error (click for detail)</a></td>
+                        {% elif x.result >= 80 and x.level == 'Placement' %}
+                        <td style="font-weight: bold;color:darkcyan"><a href="{% url 'submission' x.id %}" style="font-weight: bold;color:blue;">{{x.result|floatformat:"2"}}% المستوى الخامس</a></td>
+                        {% elif x.result >= 60 and x.level == 'Placement' %}
+                        <td style="font-weight: bold;color:darkcyan;"><a href="{% url 'submission' x.id %}" style="font-weight: bold;color:blue;">{{x.result|floatformat:"2"}}% المستوى الرابع</a></td>
+                        {% elif x.result >= 40 and x.level == 'Placement' %}
+                        <td style="font-weight: bold;color:darkcyan;"><a href="{% url 'submission' x.id %}" style="font-weight: bold;color:blue;">{{x.result|floatformat:"2"}}% المستوى الثالث</a></td>
+                        {% elif x.result >= 20 and x.level == 'Placement' %}
+                        <td style="font-weight: bold;color:darkcyan;"><a href="{% url 'submission' x.id %}" style="font-weight: bold;color:blue;">{{x.result|floatformat:"2"}}% المستوى الثاني</a></td>
+                        {% elif x.result >= 60 %}
+                        <td style="font-weight: bold;color:forestgreen"><a href="{% url 'submission' x.id %}" style="font-weight: bold;color:Green;">{{x.result|floatformat:"2"}}% إجتاز</a></td>
+                        {% elif x.result < 60 %}
+                        <td style="font-weight: bold;color:firebrick"><a href="{% url 'submission' x.id %}" style="font-weight: bold;color:red;">{{x.result|floatformat:"2"}}% غير مجتاز</a></td>
+                        {% endif %}
+                        {% endif %}
+                     </tr>
+                  </tbody>
+                  {% endfor %}
+               </table>
+               {% else %}
+               <div class="text-danger">
+                  <center>لا توجد مشاركات</center>
+               </div>
+               {% endif %}
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+<script>
+setInterval(function() { makeTimer(); }, 1000);
+window.setTimeout(function () {
+   location.href = '/submissions';
+}, 5000); // refresh/redirect
+</script>
+{% endblock javascripts %}

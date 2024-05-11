@@ -1,0 +1,38 @@
+{% extends "layouts/base.html" %}
+{% block title %} File content {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5>كود الحل الخاص بالمتسابق</h5>
+   </div>
+</div>
+<div class="card-body">
+   <div class="row">
+      <div class="col-sm-12">
+         <pre style="float: left; text-align:left; direction: ltr;">{{content}}</pre>
+      </div>
+      </row>
+   </div>
+</div>
+<div class="card">
+   <div class="card-header">
+      <h5>كود التشغيل الخاص بالتحدي</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-sm-12">
+            <pre style="float: left; text-align:left; direction: ltr;">{{mainContent}}</pre>
+         </div>
+      </div>
+   </div>
+</div>
+<div class="card">
+   <div class="card-body">
+      <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">رجوع</button>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

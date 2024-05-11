@@ -1,0 +1,37 @@
+{% extends "layouts/base.html" %}
+{% block title %} Result {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5> التحدي : {{submit.challenge.title}} | الدرجة : {{submit.result|floatformat:"2"}}%</h5>
+   </div>
+   <div class="card-header">
+      {% if submit.status != 3%}
+      <h5>مخرجات الحل</h5>
+      <div class="card-body">
+         <textarea class="form-control" rows="20" style="text-align:left; direction:ltr;" disabled>{{submit.json_text|safe}}</textarea>
+      </div>
+      {% else %}
+      <h5 style="text-align:left; direction:ltr;">Error!</h5>
+      <div class="card-body">
+         <textarea class="form-control" rows="20" style="text-align:left; direction:ltr;" disabled>{{submit.note|safe}}</textarea>
+      </div>
+      {% endif %}
+   </div>
+   <br />
+   {% if submit.result < 60 %}
+   <div class="card-header">
+      <h5>المراجع</h5>
+   </div>
+   <div class="card-body">
+      {% if referenceText != None %}
+      <textarea class="form-control" rows="7" disabled>{{referenceText}}</textarea>
+      {%endif%}
+   </div>
+   {% endif %}
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

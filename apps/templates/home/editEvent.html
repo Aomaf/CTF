@@ -1,0 +1,98 @@
+{% extends "layouts/base.html" %}
+{% block title %} ِِEdit event {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+{% if user.is_superuser or user.is_staff %}
+<div class="card">
+   <div class="card-header">
+      <h5>تعديل بيانات حدث</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>العنوان</label>
+                  <input id="otherValue1" type="text" class="form-control" name="title" value="{{ event.title }}">
+               </div>
+               <div class="form-group">
+                  <label>نوع الحدث</label>
+                  <select id="otherValue2" class="form-group" name="type">
+                     {%if event.is_hackathon == False%}
+                     <option selected>Competition</option>
+                     <option>Hackathon</option>
+                     {%else%}
+                     <option>Competition</option>
+                     <option selected>Hackathon</option>
+                     {% endif %}
+                  </select>
+               </div>
+               <div class="form-group">
+                  <label>بداية الحدث</label>
+                  {% if event.start_date %}
+                  <p style="color: firebrick;">اي تعديل على الوقت سيغير الوقت السابق وهو: {{ event.start_date}}</p>
+                  {% else %}
+                  <br>
+                  {% endif %}
+                  <input type="datetime-local" name="start_date">
+               </div>
+               <div class="form-group">
+                  <label>نهاية الحدث</label>
+                  {% if event.end_date %}
+                  <p style="color: firebrick;">اي تعديل على الوقت سيغير الوقت السابق وهو: {{ event.end_date}}</p>
+                  {% else %}
+                  <br>
+                  {% endif %}
+                  <input type="datetime-local" name="end_date">
+               </div>
+               <div class="form-group">
+                  <label>وصف الحدث</label>
+                  <textarea id="tinymcetextarea" class="form-control" name="description" rows="30">{{ event.description }}</textarea>
+               </div>
+               <div class="form-group">
+                  {% if event.alignment == 0 %}
+                  <input type="checkbox" name="english_align" value="ltr">
+                  {% else %}
+                  <input type="checkbox" name="english_align" value="ltr" checked>
+                  {% endif %}
+                  <label for="english_align">الوصف باللغة الانجليزية</label>
+                  <br>
+               </div>
+               <div>
+                  <input type="checkbox" id="Delete" name="interest" value="Delete" />
+                  <label style="color:firebrick;" for="Delete"><b>خذف</b></label>
+                  <input type="text" id="otherValue" name="Delete" placeholder="write DELETE" />
+               </div>
+               <button type="submit" name="submit" class="btn btn-success">تعديل</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+{% endblock content %}
+{% block javascripts %}
+<script>
+   const otherCheckbox = document.querySelector('#Delete');
+   const otherText = document.querySelector('#otherValue');
+   otherText.style.visibility = 'hidden';
+   const otherText2 = document.querySelector('#otherValue2');
+   otherText2.style.visibility = 'visible';
+   
+   otherCheckbox.addEventListener('change', () => {
+   	if (otherCheckbox.checked) {
+   		otherText.style.visibility = 'visible';
+   		otherText.value = '';
+   		otherText2.style.visibility = 'hidden';
+   		otherText2.value = '';
+   	} else {
+   		otherText.style.visibility = 'hidden';
+   		otherText2.style.visibility = 'visible';
+   		otherText2.value = "{{ targetUser.email }}";
+   	}
+   });
+</script>
+{% endblock javascripts %}

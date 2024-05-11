@@ -1,0 +1,198 @@
+{% extends "layouts/base.html" %}
+{% block title %} Edit challenge {% endblock %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+{% if user.is_superuser or user.is_staff %}
+<div class="card">
+   <div class="card-header">
+      <h5> تعديل تحدي | {{ch.id}}</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>العنوان</label>
+                  <input id="otherValue2" type="text" class="form-control" name="title" value="{{ ch.title }}">
+               </div>
+               <div class="form-group">
+                  <label>الحدث المرفق </label>
+                  <select class="form-control" name="event">
+                     <label>{{e.title}}</label>
+                     <option selected>None</option>
+                     {% for e in competitionList %}
+                     {% if e.title == ch.belongsToEvent.title%}
+                     <option selected>{{e.title}}</option>
+                     {% else %}
+                     <option>{{e.title}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+               </div>
+               <div class="form-group">
+                  <label>صعوبة التحدي</label>
+                  <select class="form-control" name="level">
+                     {% if ch.level == None %}
+                     <option selected>None</option>
+                     {% else %}
+                     <option>None</option>
+                     {% endif %}
+                     {% for l in levels%}
+                     {% if ch.level == l%}
+                     <option selected>{{ch.level}}</option>
+                     {% else %}
+                     <option>{{l}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+               </div>
+               <div class="form-group">
+                  <label>نوع التحدي</label>
+                  <select class="form-control" name="type">
+                     {% if ch.type == None %}
+                     <option selected>None</option>
+                     {% else %}
+                     <option>None</option>
+                     {% endif %}
+                     {% for t in pTypes %}
+                     {% if t == ch.type%}
+                     <option selected>{{t}}</option>
+                     {% else %}
+                     <option>{{t}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+               </div>
+               <div class="form-group">
+                  <!-- challenge date and time-->
+                  <label>وقت البداية</label>
+                  {% if ch.start_date %}
+                  <p style="color: firebrick;">اي تعديل على الوقت سيغير الوقت السابق وهو: {{ ch.start_date}}</p>
+                  {% else %}
+                  <br>
+                  {% endif %}
+                  <input type="datetime-local" name="start_date">
+                  <br>
+                  <br>
+                  <label>وقت النهاية</label>
+                  {% if ch.end_date %}
+                  <p style="color: firebrick;">اي تعديل على الوقت سيغير الوقت السابق وهو: {{ ch.end_date}}</p>
+                  {% else %}
+                  <br>
+                  {% endif %}
+                  <input type="datetime-local" name="end_date">
+               </div>
+               <div class="form-group">
+                  <label>وصف التحدي</label>
+                  <textarea id="tinymcetextarea" class="form-control" name="description" rows="30">{{ ch.description }}</textarea>
+               </div>
+               <div class="form-group">
+                  {% if ch.alignment == 0 %}
+                  <input type="checkbox" name="english_align" value="ltr">
+                  {% else %}
+                  <input type="checkbox" name="english_align" value="ltr" checked>
+                  {% endif %}
+                  <label for="english_align">الوصف باللغة الانجليزية</label>
+                  <br>
+               </div>
+               <br>
+               <div class="form-group">
+                  <label for="minfile">اختار ملف التشغيل -- Main:</label>
+                  <table>
+                     <tr>
+                        <td style="border-left: 2px solid #313131;">Java</td>
+                        <td style="border-left: 2px solid #313131;">Python</td>
+                        <td style="">++C</td>
+                     </tr>
+                     <tr>
+                        <td style="border-left: 2px solid #313131;"><input type="file" name="mainFile"><br><br></input></td>
+                        <td style="border-left: 2px solid #313131;"><input type="file" name="mainFilePy"><br><br></input></td>
+                        <td style=""><input type="file" name="mainFileCpp"><br><br></input></td>
+                     </tr>
+                     <tr>
+                        <td style="max-width:30px; border-left: 2px solid #313131;">
+                           {% if ch.filepath %}
+                           if updated, it overwrites the file located at: {{ch.filepath}}
+                           {% endif %}<br>
+                        </td>
+                        <td style="max-width:30px; border-left: 2px solid #313131;">
+                           {% if ch.filepathPy %}
+                           if updated, it overwrites the file located at: {{ch.filepathPy}}
+                           {% endif %}<br>
+                        </td>
+                        <td style="max-width:30px;">
+                           {% if ch.filepathCpp %}
+                           if updated, it overwrites the file located at: {{ch.filepathCpp}}
+                           {% endif %}<br>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="form-group">
+                  <label for="minImage">ارفاق شكل او صورة:</label>
+                  <br>
+                  <input type="file" name="minImage">
+                  {% if ch.attachment %}
+                  if updated, it overwrites the image located at: {{ch.attachment}}
+                  {% endif %}<br>
+                  </input>
+                  <br>
+                  <div>
+                     <label>العرض</label>
+                     <input type="text" name="width" value="{{ ch.width }}">
+                     <label>الارتفاع</label>
+                     <input type="text" name="height" value="{{ ch.height }}">
+                  </div>
+                  <br>
+               </div>
+               <div>
+                  <label>كود العلم في حال التحدي لهاكاثون:</label>
+                  <br>
+				  <textarea type="text" class="form-control" name="code" rows="2">{{ ch.code}}</textarea>
+                  <br>
+               </div>
+               <div class="form-group">
+                  <br>
+                  <label>مراجع &nbsp; &nbsp; &nbsp;(تعرض للمساعدة في حال المحاولة الغير ناجحة)</label>
+                  <textarea class="form-control" name="references" rows="3">{{ch.references}}</textarea>
+               </div>
+               <div class="form-group">
+                  <input type="checkbox" id="Delete" name="interest" value="Delete" />
+                  <label style="color:firebrick;" for="Delete"><b>خذف</b></label>
+                  <input type="text" id="otherValue" name="Delete" placeholder="write DELETE" />
+               </div>
+               <button type="submit" name="submit" class="btn btn-success">تعديل</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+   const otherCheckbox = document.querySelector('#Delete');
+   const otherText = document.querySelector('#otherValue');
+   otherText.style.visibility = 'hidden';
+   const otherText2 = document.querySelector('#otherValue2');
+   otherText2.style.visibility = 'visible';
+   
+   otherCheckbox.addEventListener('change', () => {
+   	if (otherCheckbox.checked) {
+   		otherText.style.visibility = 'visible';
+   		otherText.value = '';
+   		otherText2.style.visibility = 'hidden';
+   		otherText2.value = '';
+   	} else {
+   		otherText.style.visibility = 'hidden';
+   		otherText2.style.visibility = 'visible';
+   		otherText2.value = "{{ ch.title }}";
+   	}
+   });
+</script>
+{% endblock javascripts %}

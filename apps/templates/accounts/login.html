@@ -1,0 +1,51 @@
+{% extends "layouts/base.html" %}
+{% block stylesheets %}
+<link href="/static/assets/css/style.css" rel="stylesheet" />
+
+{% endblock stylesheets %}
+
+{% block title %} Login {% endblock %}
+
+{% block content %}
+
+<div class="auth-wrapper">
+    <div class="auth-content">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="mb-4">
+                    <i class="feather icon-unlock auth-icon"></i>
+                </div>
+                <h3 class="mb-4">تسجيل الدخول</h3>
+                <span class="mb-0 text-muted">
+                    {% if msg %}
+                        {{ msg | safe }}
+                    {% endif %}
+                </span>
+                <br />
+                <br />
+
+                <form role="form" method="post" action="">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        {{ form.username }}
+                    </div>
+                    <div class="input-group mb-4">
+                        {{ form.password }}
+                    </div>
+                    <button type="submit" name="login" class="btn btn-primary shadow-2 mb-4">دخول</button>
+                </form>
+                <table>
+                    <tr>
+                        <p class="mb-0 text-muted">لا يوجد لديك حساب ؟ <a href="{% url 'register' %}">تسجيل</a></p>
+                    </tr>
+                    <tr>
+                        <p class="mb-0 text-muted">هل نسيت كلمة المرور؟ <a href="{% url 'recover' %}">استعادة كلمة المرور</a></p>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

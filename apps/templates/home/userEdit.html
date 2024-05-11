@@ -1,0 +1,77 @@
+{% extends "layouts/base.html" %}
+{% block title %} Edit user {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+{% if user.is_superuser %}
+<div class="card">
+   <div class="card-header">
+      <h5>Edit user</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>الاسم الاول</label>
+                  <input id="otherValue1" type="text" class="form-control" name="fName" value="{{ targetUser.first_name }}">
+                  <br>
+                  <label>الاسم الاخير</label>
+                  <input id="otherValue2" type="text" class="form-control" name="lName" value="{{ targetUser.last_name }}">
+                  <br>
+                  <label>صلاحية المستخدم</label>
+                  <select class="form-control" name="userType">
+                     {% if targetUser.is_superuser %}
+                     <option selected>admin</option>
+                     <option>staff</option>
+                     <option>مستخدم</option>
+                     {% elif targetUser.is_staff %}
+                     <option>admin</option>
+                     <option selected>staff</option>
+                     <option>مستخدم</option>
+                     {% else %}
+                     <option>admin</option>
+                     <option>staff</option>
+                     <option selected>مستخدم</option>
+                     {% endif %}
+                  </select>
+                  <br>
+               </div>
+               <div>
+                  <input type="checkbox" id="Delete" name="interest" value="Delete" />
+                  <label style="color:firebrick;" for="Delete"><b>خذف</b></label>
+                  <input type="text" id="otherValue" name="Delete" placeholder="write DELETE" />
+               </div>
+               <button type="submit" name="submit" class="btn btn-success">تعديل</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+
+{% endblock content %}
+{% block javascripts %}
+<script>
+   const otherCheckbox = document.querySelector('#Delete');
+   const otherText = document.querySelector('#otherValue');
+   otherText.style.visibility = 'hidden';
+   const otherText2 = document.querySelector('#otherValue2');
+   otherText2.style.visibility = 'visible';
+   
+   otherCheckbox.addEventListener('change', () => {
+   	if (otherCheckbox.checked) {
+   		otherText.style.visibility = 'visible';
+   		otherText.value = '';
+   		otherText2.style.visibility = 'hidden';
+   		otherText2.value = '';
+   	} else {
+   		otherText.style.visibility = 'hidden';
+   		otherText2.style.visibility = 'visible';
+   		otherText2.value = "{{ targetUser.email }}";
+   	}
+   });
+</script>
+{% endblock javascripts %}

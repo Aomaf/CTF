@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+{% block title %} Add event {% endblock %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+{% if user.is_superuser or user.is_staff %}
+<div class="card">
+   <div class="card-header">
+      <h5>إضافة حدث</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>العنوان</label>
+                  <input type="text" class="form-control" name="title">
+               </div>
+               <div class="form-group">
+                  <label>نوع الحدث</label>
+                  <select class="form-control" name="type">
+                     <option selected>Competition</option>
+                     <option>Hackathon</option>
+                  </select>
+               </div>
+               <div class="from-group">
+                  <label for="start_date">بداية الحدث</label>
+                  <br>
+                  <input type="datetime-local" name="startDate">
+                  <br>
+               </div>
+               <div class="from-group">
+                  <br>
+                  <label for="end_date">نهاية الحدث</label>
+                  <br>
+                  <input type="datetime-local" name="endDate">
+                  <br>
+               </div>
+               <div class="form-group">
+                  <br>
+                  <label>معلومات الحدث</label>
+                  <textarea id="tinymcetextarea" class="form-control" name="description" rows="30"></textarea>
+               </div>
+               <div class="form-group">
+                  <input type="checkbox" name="english_align" value="ltr">
+                  <label for="english_align">الوصف باللغة الانجليزية</label>
+                  <br>
+               </div>
+               <button href="{% url 'competitions' %}" type="submit" name="submit" class="btn btn-success">إضافة</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

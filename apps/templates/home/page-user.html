@@ -1,0 +1,150 @@
+{% extends "layouts/base.html" %}
+{% block title %} Page User {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="row">
+   {% if messages %}
+   {% for msg in messages %}
+   <div class="alert {% if msg.tags %}alert-{{ msg.tags }}{% endif %}" role="alert" style="text-align: center; margin-right: 1px;">{{msg}}</div>
+   {% endfor %}
+   {% endif %}
+</div>
+
+<div class="card">
+   <div class="card-header">
+      <h5 class="title">تحديد المستوى</h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            {% if placements|length == 0 %}
+            <div class="text-danger">لا يوجد تحديات متاحة لتحديد المستوى</div>
+            {% else %}
+            <tbody>
+               {% for x in placements %}
+               <tr>
+                  {% csrf_token %}
+                  <td><img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/p.png" alt="activity-user"></td>
+                  <td>
+                     <h6 class="mb-1" style="width:400px;">{{x.title|truncatechars:50}}</h6>
+                     <section>{{x.description|truncatechars:50}}</section>
+                  </td>
+                  <td>
+                     <h6 class="text-muted"><li>تاريخ الإنشاء: {{x.pub_date}}</li></h6>
+                     <h6 class="text-muted"><li>إجتاز / مرسل: <code> </code>{{x.passed}}<code>/</code>{{x.submissions}} </li></h6>
+                  </td>
+                  <td>
+                     <a href="{% url 'challenge' x.id %}" class="btn btn-info">عرض</a>
+                     {% if user.is_superuser %}
+                     <a href="{% url 'editChallenge' x.id %}" class="btn btn-info">تعديل</a>
+                     <a href="{% url 'challengeResult' x.id %}" class="btn btn-info">النتائج</a>
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+            {% endif %}
+         </table>
+      </div>
+   </div>
+</div>
+<div class="card">
+   <div class="col-sm-12">
+      <div class="card-header">
+         <h4 class="title">تحديث ملف التعريف</h4>
+      </div>
+      <div class="card-header">
+         <h5 class="title">تحديث اسم العضو</h5>
+      </div>
+      <div class="card-body">
+         <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+               <div class="form-group">
+                  {% if cont.user_nameF %}<input name="First_Name" type="text" class="form-control" placeholder="الأسم الأول" value="{{ cont.user_nameF }}">
+                  {% elif not cont.user_nameF %}<input name="First_Name" type="text" class="form-control" placeholder="الأسم الأول" value="">
+                  {% endif %}
+               </div>
+               <div class="form-group">
+                  {% if cont.user_nameM %}<input name="Middle_Name" type="text" class="form-control" placeholder="الأسم الثاني" value="{{ cont.user_nameM }}">
+                  {% elif not cont.user_nameM %}<input name="Middle_Name" type="text" class="form-control" placeholder=" الأسم الثاني" value="">
+                  {% endif %}
+               </div>
+               <div class="form-group">
+                  {% if cont.user_nameM2 %}<input name="Middle_Name2" type="text" class="form-control" placeholder="الأسم الثالث" value="{{ cont.user_nameM2 }}">
+                  {% elif not cont.user_nameM2 %}<input name="Middle_Name2" type="text" class="form-control" placeholder=" الأسم الثالث" value="">
+                  {% endif %}
+               </div>
+               <div class="form-group">
+                  {% if cont.user_nameL %}<input name="Last_Name" type="text" class="form-control" placeholder="الأسم الأخير" value="{{ cont.user_nameL }}">
+                  {% elif not cont.user_nameL %}<input name="Last_Name" type="text" class="form-control" placeholder="الأسم الأخير" value="">
+                  {% endif %}
+               </div>
+               <div>
+                  <button type="submit" name="nameUpdate" class="btn btn-primary">حفظ</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<div class="card">
+   <div class="col-sm-12">
+      <div class="card-header">
+         <h5 class="title">تحديث البريد الإلكتروني </h5>
+      </div>
+      <div class="card-body">
+         <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+               <div class="form-group" text-align="center">
+                  <label>البريد الإلكتروني الحالي</label>
+                  {% if "edu.sa" in user.email%}
+                  <input name="oldEmail" dir = "ltr" type="text" class="form-control" size = "30" placeholder="{{user.email}}" disabled>
+                  {%else%}
+                  <input name="oldEmail" type="text" class="form-control" size = "30" placeholder="{{user.email}}" disabled>
+                  {%endif%}
+               </div>
+            </div>
+            <div class="row">
+               <div class="form-group" text-align="center">
+                  <input name="newEmail" type="text" class="form-control" size = "30" placeholder="البريد الإلكتروني الجديد">
+               </div>
+               <div>
+                  <button type="submit" name="emailUpdate"class="btn btn-fill btn-primary">تعديل</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+<div class="card">
+   <div class="col-sm-12">
+      <div class="card-header">
+         <h5 class="title">تحديث كلمة المرور</h5>
+      </div>
+      <div class="card-body">
+         <form method="POST">
+            {% csrf_token %}
+            <div class="row">
+               <div class="form-group" text-align="left">
+                  <input name="oldPassword" type="password" class="form-control" placeholder="كلمة المرور الحالية">
+               </div>
+               <div class="form-group" text-align="center">
+                  <input name="newPassword" type="password" class="form-control" placeholder="كلمة المرور الجديدة">
+               </div>
+               <div class="form-group" text-align="center">
+                  <input name="newPassword2" type="password" class="form-control" placeholder="تأكيد كلمة المرور الجديدة">
+               </div>
+               <div>
+                  <button type="submit" name="passwordUpdate"class="btn btn-fill btn-primary">تعديل</button>
+               </div>
+            </div>
+         </form>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

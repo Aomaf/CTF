@@ -1,0 +1,100 @@
+{% extends "layouts/base.html" %}
+{% block title %}Challenges{% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+
+<div class="row">
+   {% if messages %}
+   {% for message in messages %}
+   <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{message}}</div>
+   {% endfor %}
+   {% endif %}
+</div>
+
+<div class="card">
+   <div class="card-header">
+	<h6>
+		<form method="post" action="/challenges">
+			{% csrf_token %}
+			<label>مستوى التحدي</label>
+			<select name="level_select">
+				{% if belongsTo%}
+					<option selected>{{belongsTo}}</option>
+					<option>All</option>
+				{% else %}
+					<option selected>All</option>
+				{% endif %}
+
+				{% for l in levels%}
+					{% if l != belongsTo %}
+						<option>{{l}}</option>
+					{% endif %}
+				{% endfor %}
+			</select>	
+			<button type="submit" value="" class = "btn btn-info">عرض</button>
+		</form>
+	</h6>
+   </div>
+</div>
+<div class="card">
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tbody>
+               {% if challenges|length >= 1 %}
+               {% for x in challenges %}
+               <tr>
+                  {% csrf_token %}
+                  {% if x.level == 'Level 1'%}
+                  <td><img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/1.png" alt="activity-user"></td>
+                  {% elif x.level == 'Level 2'%}
+                  <td><img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/2.png" alt="activity-user"></td>
+                  {% elif x.level == 'Level 3'%}
+                  <td><img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/3.png" alt="activity-user"></td>
+                  {% elif x.level == 'Level 4'%}
+                  <td><img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/4.png" alt="activity-user"></td>
+                  {% elif x.level == 'Level 5'%}
+                  <td><img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/5.png" alt="activity-user"></td>
+                  {% endif %}
+                  <td>
+                     <h6 class="mb-1" style="width:400px;"><a href="{% url 'challenge' x.id %}">{{x.title|truncatechars:50|safe}}</a></h6>
+                     <section>{{x.description|truncatechars:50|safe}}</section>
+                  </td>
+                  <td>
+                     <h6 class="text-muted"><li>تاريخ الإنشاء: {{x.pub_date}}</li></h6>
+                     <h6 class="text-muted"><li>مرسل / إجتاز : {{x.passed}}<code>/</code>{{x.submissions}}</li></h6>
+                  </td>
+                  <td align="left">
+                     {% if user.is_superuser or user.is_staff %}
+						<a href="{% url 'challengeResult' x.id %}" class="btn btn-info">النتائج</a>
+						<a href="{% url 'editChallenge' x.id %}" class="btn btn-info">تعديل</a>
+						<h6 class="text-muted"></h6>
+						{% if x.filepath %}
+						<a href="{% url 'viewMainFile' cID=x.id target='Java' %}" class="btn btn-info">Java</a>
+						{%endif%}
+						{% if x.filepathPy %}
+						<a href="{% url 'viewMainFile' cID=x.id target='Python' %}" class="btn btn-info">Python</a>
+						{%endif%}
+						{% if x.filepathCpp %}
+						<a href="{% url 'viewMainFile' cID=x.id target='Cpp' %}" class="btn btn-info">Cpp</a>
+						{%endif%}
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+               {% else %}
+               <div class="text-danger">
+                  <strong>
+                     <center>لا يوجد تحديات او مسابقات مرفوعة</center>
+                  </strong>
+               </div>
+               {% endif %}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

@@ -1,0 +1,138 @@
+{% extends "layouts/base.html" %}
+{% block title %} Contestant {% endblock %}
+{% block stylesheets %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5>عن المتسابق</h5>
+      <div><label></label></div>
+      <div><label>الاسم : {{contestant.user_nameF}} {{contestant.user_nameM}} {{contestant.user_nameM2}} {{contestant.user_nameL}}</label></div>
+      <div><label>العنوان البريدي : {{contestant.email}}</label></div>
+   </div>
+   <div class="card-header">
+      <div><label>المشاركات : {{totalSubmissions}} </label></div>
+      <div><label>المشاركات الصحيحة: {{submissions|length}}</label></div>
+      <div><label>اجتياز : {{successSubmissions}}</label></div>
+      <div><label>درجة كاملة : {{fullMarkSubmissions}}</label></div>
+   </div>
+   <div class="card-body">
+      <h5>ترتيب المتسابق في التحديات -- غير المسابقات</h5>
+      <table class="table table-hover" style="text-align:center;">
+         <tbody>
+            <tr>
+               <th>المستوى الاول</th>
+               <th>المستوى الثاني</th>
+               <th>المستوى الثالث</th>
+               <th>المستوى الرابع</th>
+               <th>المستوى الخامس</th>
+            </tr>
+            <tr>
+               <td>{{userLevel1}}</td>
+               <td>{{userLevel2}}</td>
+               <td>{{userLevel3}}</td>
+               <td>{{userLevel4}}</td>
+               <td>{{userLevel5}}</td>
+            </tr>
+         </tbody>
+      </table>
+      <!--
+         <canvas id="myChart1" style="width:100%;max-width:100%"></canvas>
+         <script>
+         	var xValues = ["المشاركات", "اجتياز", "درجة كاملة"];
+         	var yValues = [{{submissions|length}},{{successSubmissions}},{{fullMarkSubmissions}}];
+         	var barColors = ["#ECCE08", "#2b5797", "#A8FFC8"];
+         
+         	new Chart("myChart1", {
+         		type: "pie",
+         		data: {
+         			labels: xValues,
+         			datasets: [{
+         				backgroundColor: barColors,
+         				data: yValues
+         			}]
+         		},
+         		options: {
+         			legend: { display: true },
+         		}
+         	});
+         </script>
+         -->
+   </div>
+</div>
+<div class="card">
+   <div class="card-header">
+      <h5>المرفوعات الصحيحة</h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tbody>
+               <tr>
+                  <th style="width:40%">التحدي</th>
+                  <th style="width:10%">المستوى</th>
+                  <th style="width:10%">عدد المحاولات</th>
+                  <th style="width:20%">تاريخ العرض و التسليم</th>
+                  <th style="width:10%">النتيجة التراكمية</th>
+                  <th style="width:10%">الملف</th>
+               </tr>
+               {% for x in submissions %}
+               <tr>
+                  <td width="10">{{x.challenge.title}}
+                     {% if x.challenge.belongsToEvent %}
+                     @ {{x.challenge.belongsToEvent.title}}
+                     {% endif %}
+                  </td>
+                  <td>{{x.level}}</td>
+                  <td>{{x.counter}}</td>
+                  <td>Viewed: {{x.view_date}}  |  Solved: {{x.solve_date}}</td>
+                  <td>{{x.sum_result}}</td>
+                  <td>
+                     {% if x.filepath %}
+                     <a href="{% url 'file' x.id %}" class="btn btn-info">الحل</a>
+                     {% else %}
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+<div class="card">
+   <div class="card-header">
+      <h5>المرفوعات الغير صحيحة</h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tbody>
+               <tr>
+                  <th style="width:40%">التحدي</th>
+                  <th style="width:10%">الملف</th>
+               </tr>
+               {% for x in bad_submissions %}
+               <tr>
+                  <td width="10">{{x.challenge.title}}
+                     {% if x.challenge.belongsToEvent %}
+                     @ {{x.challenge.belongsToEvent.title}}
+                     {% endif %}
+                  </td>
+                  <td>
+                     {% if x.filepath %}
+                     <a href="{% url 'file' x.id %}" class="btn btn-info">الحل</a>
+                     {% else %}
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

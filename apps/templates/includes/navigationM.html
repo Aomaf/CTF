@@ -1,0 +1,83 @@
+<header>
+   <nav class="navbar navbar-expand-md fixed-top bg-white">
+      <div class="container">
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse main-menu" id="navbarSupportedContent">
+            <ul class="navbar-nav">
+               {% if user.is_authenticated %}
+               <li class="nav-item">
+                  <a class="nav-link" href="/index.html" style="{% if 'index' in segment %} TEXT-DECORATION: underline {% endif %}">الرئيسية</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/index.html" style="{% if 'challenges' in segment %} TEXT-DECORATION: underline {% endif %}">التحديات</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/index.html" style="{% if 'competitions' in segment %} TEXT-DECORATION: underline {% endif %}">المسابقات</a>
+               </li>
+               {% else %}
+               <li class="nav-item">
+                  <a class="font-weight-bold nav-link page-scroll" href="/#about">الرئيسية</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/challenges" style="{% if 'challenges' in segment %} TEXT-DECORATION: underline {% endif %}">التحديات</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/competitions" style="{% if 'competitions' in segment %} TEXT-DECORATION: underline {% endif %}">المسابقات</a>
+               </li>
+               <li class="nav-item">
+                  <a class="font-weight-bold nav-link page-scroll" href="/index.html">طريقة الاستخام</a>
+               </li>
+               <li class="nav-item">
+                  <a class="font-weight-bold nav-link page-scroll" href="/dashboard">الدخول</a>
+               </li>
+               {% endif %}
+            </ul>
+         </div>
+
+         <div class="collapse navbar-collapse main-menu" style="direction:ltr;"id="navbarSupportedContent">
+            <ul class="navbar-nav">
+               {% if user.is_authenticated %}
+               <li class="nav-item">
+                  <a href="{% url 'logout' %}" class="nav-link">خروج</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/submissions" style="{% if 'submissions' in segment %} TEXT-DECORATION: underline {% endif %}">المرفوعات</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="/dashboard" style="{% if 'dashboard' in segment %} TEXT-DECORATION: underline {% endif %}">لوحة العضو</a>
+               </li>
+                  {%if user.is_superuser or user.is_staff%}
+                  <div class="dropdown">
+                     <a href="" class="nav-link" data-toggle="dropdown">المراجع</a>
+                     <ul class="dropdown-menu">
+                        <li class="nav-item">
+                           <a class="nav-link" href="/references">قائمة المراجع</a>
+                        </li>
+                        <li class="nav-item">
+                           <a class="nav-link" href="/addRef">اضافة مرجع</a>
+                        </li>
+                     </ul>
+                  </div>
+                  <div class="dropdown">
+                     <a href="" class="nav-link" data-toggle="dropdown">التحديات و المسابقات</a>
+                     <ul class="dropdown-menu">
+                        <li class="nav-item">
+                           <a class="nav-link" href="/addEvent">إضافة حدث</a>
+                        </li>
+                        <li class="nav-item">
+                           <a class="nav-link" href="/addChallenge">إضافة تحدي</a>
+                        </li>
+                     </ul>
+                  </div>
+                  {% endif %}
+               {% endif %}
+            </ul>
+         </div>
+      </div>
+      <div>
+         <img src="/static/assets/images/QUlogo.png" alt="" width="102.06px" height="56.7px" style="background-position: center top; background-repeat: no-repeat;background-attachment: scroll;">
+     </div>
+   </nav>
+</header>

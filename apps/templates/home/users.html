@@ -1,0 +1,56 @@
+{% extends "layouts/base.html" %}
+{% block title %} Users {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5>المستخدمين</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-xl-12">
+            <div class="table-responsive">
+               {% if users and users|length >= 1 %}
+               <table class="table table-hover">
+                  <thead>
+                     <tr>
+                        <th>User Name</th>
+                        <th>Email</th>
+                        <th>Type</th>
+                     </tr>
+                  </thead>
+                  {% for x in users %}
+                  <tbody>
+                     <tr>
+                        <td>{{x.username}}</td>
+                        <td>{{x.email}}</td>
+                        {% if x.is_superuser%}
+                        <td>Admin</td>
+                        {% elif x.is_staff%}
+                        <td>Staff</td>
+                        {% else %}
+                        <td>مستخدم</td>
+                        {% endif %}
+                        <td>
+                           {% if user.is_superuser %}
+                           <a href="{% url 'userEdit' x.id %}" class="btn btn-info">تعديل</a>
+                           {% endif %}
+                        </td>
+                     </tr>
+                  </tbody>
+                  {% endfor %}
+               </table>
+               {% else %}
+               <center>
+                  <span class="d-block m-t-5"><code>No Users</code></span>
+               </center>
+               {% endif %}
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

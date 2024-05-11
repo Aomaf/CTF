@@ -1,0 +1,128 @@
+{% extends "layouts/base.html" %}
+{% block title %} Add challenge {% endblock %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+{% if user.is_superuser or user.is_staff %}
+<div class="card">
+   <div class="card-header">
+      <h5>إضافة تحدي</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>عنوان التحدي</label>
+                  <input type="text" class="form-control" name="title">
+               </div>
+               <br>
+               <div>
+                  <label>إرفاق حدث</label>
+                  <select class="form-control" name="event">
+                     <option selected>None</option>
+                     {% for e in competitionList %}
+                     <option>{{e.title}}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+               <br>
+               <div class="form-group">
+                  <label>صعوبة التحدي</label>
+                  <br>
+                  <select class="form-control" name="level">
+                     <option selected>None</option>
+                     {% for l in levels%}
+                     <option>{{l}}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+               <br>
+               <div class="form-group">
+                  <label>نوع التحدي</label>
+                  <select class="form-control" name="type">
+                     <option selected>None</option>
+                     {% for t in pTypes%}
+                     <option>{{t}}</option>
+                     {% endfor %}
+                  </select>
+               </div>
+               <br>
+               <div class="from-group">
+                  <label for="start_date">وقت البداية</label>
+                  <br>
+                  <input type="datetime-local" name="start_date">
+                  <br>
+               </div>
+               <div class="from-group">
+                  <label for="end_date">وقت النهاية</label>
+                  <br>
+                  <input type="datetime-local" name="end_date">
+               </div>
+               <br>
+               <div class="form-group">
+                  <label>وصف التحدي</label>
+                  <br>
+                  <textarea id="tinymcetextarea" class="form-control" name="description" rows="30"></textarea>
+               </div>
+               <div class="form-group">
+                  <input type="checkbox" name="english_align" value="ltr">
+                  <label for="english_align">الوصف باللغة الانجليزية</label>
+                  <br>
+               </div>
+               <br>
+               <div class="form-group">
+                  <label for="minfile">اختار ملف التشغيل -- Main:</label>
+                  <table>
+                     <tr>
+                        <td>Java</td>
+                        <td>Python</td>
+                        <td>++C</td>
+                     </tr>
+                     <tr>
+                        <td><input type="file" name="mainFile"><br><br></input></td>
+                        <td><input type="file" name="mainFilePy"><br><br></input></td>
+                        <td><input type="file" name="mainFileCpp"><br><br></input></td>
+                     </tr>
+                  </table>
+               </div>
+               <br>
+               <div class="form-group">
+                  <label for="minImage">ارفاق شكل او صورة:</label>
+                  <br>
+                  <input type="file" name="minImage" /><br><br>
+                  <div>
+                     <label>عرض الصورة</label>
+                     <input type="text" name="width">
+                     <label>ارتفاع الصورة</label>
+                     <input type="text" name="height">
+                  </div>
+                  <br>
+               </div>
+               <div class="form-group">
+                  <br>
+                  <label>كود العلم في حال التحدي لهاكاثون:</label>
+                  <br>
+                  <textarea type="text" class="form-control" name="code" rows="2"></textarea>
+                  <br>
+               </div>
+               <div class="form-group">
+                  <br>
+                  <label>مراجع &nbsp; &nbsp; &nbsp;(تعرض للمساعدة في حال المحاولة الغير ناجحة)</label>
+                  <textarea class="form-control" name="references" rows="3"></textarea>
+               </div>
+               <br>
+               <button href="{% url 'challenges' %}" type="submit" name="submit" class="btn btn-success">اضافة</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+{% endblock content %}
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% endblock javascripts %}

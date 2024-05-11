@@ -1,0 +1,86 @@
+{% block content %}
+<nav class="pcoded-navbar">
+    <div class="navbar-wrapper">
+        <div class="navbar-brand header-logo">
+            <a href="{% url 'pageuser' %}" class="b-brand">
+                <span>
+                    <h2 class="b-title"> مرحبا {{user.username}}</h2>
+                </span>
+            </a>
+            <a class="mobile-menu" id="mobile-collapse" href="javascript:"><span></span></a>
+        </div>
+        {% if user.is_superuser == True %}
+            <a href="{% url 'users' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext"> إدارة المستخدمين </span></a>
+        {% endif %}
+        {% if user.is_superuser or user.is_staff %}
+            <a href="{% url 'contestants' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-users"></i></span><span class="pcoded-mtext"> قائمة المتسابقين </span></a>
+        {% endif %}
+        <hr width="60%" color="gray" />
+        <div class="navbar-content scroll-div">
+            <ul class="nav pcoded-inner-navbar">
+                {% if user.is_superuser == True or user.is_staff == True%}
+                <div style="text-align: center;">
+                    <span style="border:0px solid grey;">
+                        المسابقات والتحديات
+                    </span>
+                </div>
+                
+                <li class="nav-item">
+                    <a href="{% url 'addChallenge' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-plus"></i></span><span class="pcoded-mtext">إضافة تحدي</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'addEvent' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-plus"></i></span><span class="pcoded-mtext">إضافة حدث</span></a>
+                </li>
+                <hr width="60%" color="gray" />
+
+                <div style="text-align: center;">
+                    <span style="border:0px solid grey;">
+                        المراجع
+                    </span>
+                </div>
+                
+                <li class="nav-item">
+                    <a href="{% url 'addRef' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-plus"></i></span><span class="pcoded-mtext">اضافة مرجع</span></a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'references' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-list"></i></span><span class="pcoded-mtext"> قائمة المراجع</span></a>
+                </li>
+                <hr width="60%" color="gray" />
+                {% endif %}
+                
+                <div style="text-align: center;">
+                    <span style="border:0px solid grey;">
+                        القائمة
+                    </span>
+                </div>
+
+                <li class="nav-item {% if 'dashboard' in segment %} active {% endif %}">
+                    <a href="/dashboard" class="nav-link "><span class="pcoded-micon"><i class="feather icon-home"></i></span><span class="pcoded-mtext">اللوحة الرئيسية</span></a>
+                </li>
+                <li class="nav-item {% if 'challenges' in segment %} active {% endif %}">
+                    <a href="/challenges" class="nav-link "><span class="pcoded-micon"><i class="feather icon-server"></i></span><span class="pcoded-mtext">التحديات</span></a>
+                </li>
+                <li class="nav-item {% if 'competitions' in segment %} active {% endif %}">
+                    <a href="/competitions" class="nav-link "><span class="pcoded-micon"><i class="feather icon-server"></i></span><span class="pcoded-mtext">المسابقات</span></a>
+                </li>
+                <li class="nav-item {% if 'submissions' in segment %} active {% endif %}">
+                    <a href="{% url 'submissions' %}" class="nav-link "><span class="pcoded-micon"><i class="feather icon-layers"></i></span><span class="pcoded-mtext">المرسل</span><span class="pcoded-badge "></span></a>
+                </li>
+                <hr width="60%" color="gray" />
+                <div style="text-align: center;">
+                    <span style="border:0px solid grey;">
+                        الجلسة
+                    </span>
+                </div>
+                <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link">
+                        <span class="pcoded-micon"><i class="feather icon-power"></i></span><span class="pcoded-mtext">خروج</span>
+                    </a>
+                </li>
+
+
+            </ul>
+        </div>
+    </div>
+</nav>
+{% endblock content %}

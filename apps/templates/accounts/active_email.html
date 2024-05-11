@@ -1,0 +1,8 @@
+{% autoescape off %}
+
+{{ user.username }} اهلا بك 
+فضلا النقر على الرابط ادناه لتفعيل حسابك في المنصة واكمال التسجيل:
+
+http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+
+{% endautoescape %}

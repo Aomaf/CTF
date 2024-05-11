@@ -1,0 +1,129 @@
+{% extends "layouts/base.html" %}
+{% block title %} Competitions {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="row">
+   {% if messages %}
+   {% for message in messages %}
+   <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{message}}</div>
+   {% endfor %}
+   {% endif %}
+</div>
+
+<div class="card">
+   <div class="card-header">
+      <h5>المسابقات المتاحة</h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tbody>
+               {% if events|length >= 1 %}
+               {% for x in events %}
+               <tr>
+                <td align="right" width="5%">
+                     {% if x.is_hackathon == 1%}
+                     <img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/H.png" alt="activity-user">
+                     {% else %}
+                     <img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/C.png" alt="activity-user">
+                     {% endif %}
+                  </td>
+                  <td align="right" width="40%">
+                     {% if x.start_date <= currentTime %}
+                     <h6 class="mb-1" style="width:400px;"><a href="{% url 'competition' x.id %}">{{x.title|truncatechars:50}}</a></h6>
+                     {% else %}
+                     <h6 class="mb-1" style="width:400px;"><a href="{% url 'competition' x.id %}">{{x.title|truncatechars:50}}</a> (قريبا ...)</h6>
+                     {%endif%}
+                  </td>
+                  <td align="right" width="40%">
+                     <h6 class="text-muted">
+                        <li> بداية الحدث : {{x.start_date}}</li>
+                     </h6>
+                     <h6 class="text-muted">
+                        <li> نهاية الحدث : {{x.end_date}}</li>
+                     </h6>
+                  </td>
+                  <td align="left" width="15%">
+                     {% if user.is_superuser or user.is_staff %}
+                        <a href="{% url 'editEvent' x.id %}" class="btn btn-info">تعديل</a>
+                     {% endif %}
+                     
+                     {% if x.end_date > currentTime %}
+                        {%if x.registered %}
+                           <a href="{% url 'groupEditing' eID=x.id gID=x.registered %}" class="btn btn-info">تعديل المجموعة</a>
+                        {%else%}
+                           <a href="{% url 'groupRegisteration' x.id %}" class="btn btn-info">التسجيل</a>
+                        {%endif%}
+                     {% endif %}
+
+                     {% if currentTime >= x.start_date and currentTime < x.end_date and user.is_authenticated %}
+                        <a href="{% url 'scoreboard' eID=x.id %}" class="btn btn-info">لوحة النتائج</a>
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+               {% else %}
+               <div class="text-danger">
+                  <center>لا يوجد مسابقات مرفوعة</center>
+               </div>
+               {% endif%}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+<br>
+<div class="card">
+   <div class="card-header">
+      <h5>المسابقات المنتهية</h5>
+   </div>
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tbody>
+               {% if oldevents|length >= 1 %}
+               {% for x in oldevents %}
+               <tr>
+                <td align="right" width="5%">
+                     {% if x.belongsToEvent.is_hackathon == 1%}
+                     <img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/H.png" alt="activity-user">
+                     {% else %}
+                     <img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/C.png" alt="activity-user">
+                     {% endif %}
+                  </td>
+                  <td align="right" width="40%">
+                     {% if x.start_date <= currentTime %}
+                     <h6 class="mb-1" style="width:400px;"><a href="{% url 'competition' x.id %}">{{x.title|truncatechars:50}}</a></h6>
+                     {% else %}
+                     <h6 class="mb-1" style="width:400px;"><a href="">{{x.title|truncatechars:50}}</a></h6>
+                     {%endif%}
+                  </td>
+                  <td align="right" width="40%">
+                     <h6 class="text-muted">
+                        <li> بداية الحدث : {{x.start_date}}</li>
+                     </h6>
+                     <h6 class="text-muted">
+                        <li> نهاية الحدث : {{x.end_date}}</li>
+                     </h6>
+                  </td>
+                  <td align="left" width="15%">
+                     {% if user.is_superuser or user.is_staff %}
+                     <a href="{% url 'editEvent' x.id %}" class="btn btn-info">تعديل</a>
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+               {% else %}
+               <div class="text-danger">
+                  <center>لا يوجد مسابقات مرفوعة</center>
+               </div>
+               {% endif%}
+            </tbody>
+         </table>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

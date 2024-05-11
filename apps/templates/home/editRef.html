@@ -1,0 +1,81 @@
+{% extends "layouts/base.html" %}
+{% block title %} Edit reference {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+{% if user.is_superuser or user.is_staff %}
+<div class="card">
+   <div class="card-header">
+      <h5>تعديل مرجع</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>مستوى</label>
+                  <select id = "otherValue1" class="form-control" name="level">
+                     {% for l in levels %}
+                     {% if l == ref.level %}
+                     <option selected>{{l}}</option>
+                     {%else%}
+                     <option>{{l}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+                  <br>
+                  <label>نوع</label>
+                  <select id = "otherValue2"  class="form-control" name="type">
+                     {% for t in pTypes %}
+                     {% if t == ref.type %}
+                     <option selected>{{t}}</option>
+                     {%else%}
+                     <option>{{t}}</option>
+                     {% endif %}
+                     {% endfor %}
+                  </select>
+                  <br>
+                  <label>المراجع</label>
+                  <div class="form-group">
+                     <label>وصف المرجع</label>
+                     <textarea id="tinymcetextarea" class="form-control" name="references" rows="25">{{ ref.references }}</textarea>
+                  </div>
+                  <br>
+               </div>
+               <div>
+                  <input type="checkbox" id="Delete" name="interest" value="Delete" />
+                  <label style="color:firebrick;" for="Delete"><b>خذف</b></label>
+                  <input type="text" id="otherValue" name="Delete" placeholder="write DELETE" />
+               </div>
+               <button type="submit" name="submit" class="btn btn-success">تعديل</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endif %}
+{% endblock content %}
+{% block javascripts %}
+<script>
+   const otherCheckbox = document.querySelector('#Delete');
+   const otherText = document.querySelector('#otherValue');
+   otherText.style.visibility = 'hidden';
+   const otherText2 = document.querySelector('#otherValue2');
+   otherText2.style.visibility = 'visible';
+   
+   otherCheckbox.addEventListener('change', () => {
+   	if (otherCheckbox.checked) {
+   		otherText.style.visibility = 'visible';
+   		otherText.value = '';
+   		otherText2.style.visibility = 'hidden';
+   		otherText2.value = '';
+   	} else {
+   		otherText.style.visibility = 'hidden';
+   		otherText2.style.visibility = 'visible';
+   		otherText2.value = "{{ ref.type }}";
+   	}
+   });
+</script>
+{% endblock javascripts %}

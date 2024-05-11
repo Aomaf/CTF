@@ -1,0 +1,109 @@
+{% extends "layouts/base.html" %}
+{% load mathfilters %}
+{% block title %} Scoreboard {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="row">
+      <div class="table">
+         <table class="table">
+            <tr>
+               <td>
+                  <h3>{{event.title}}</h3>
+               </td>
+               <td>
+                  <h5> البداية : {{event.start_date}}</h5>
+                  <h5 class="text-c-red"> النهاية : {{event.end_date}} </h5>
+                  <h5 style="color:#277d67;" id="countdown"></h5>
+                  <h5>عدد المجموعات المشاركة :  {{groups|length}} </h5>
+               </td>
+            <tr>
+         </table>
+      </div>
+   </div>
+</div>
+<div class="card">
+   <div class="card-body">
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tr>
+               <th style="width:10%; text-align: center;font-weight:bold">اسم المتسابق او المجموعة</th>
+               {%for ch in challenges%}
+               <th style="width:23%;text-align: center;font-weight:bold">{{ch.title}}</th>
+               {%endfor%}
+            </tr>
+            {% for g in groups %}
+            <tr>
+               {% if g.submissions|length >= 1%}
+               <td style="text-align: center;">{{g.name}}</id>
+                  {% for sub in g.submissions %}
+                  {% if sub.result >= 100 %}
+               <td bgcolor="#30e023" style="border:1px solid black; color: black;text-align: center;">النتيجة: {{sub.result}}
+                  (في {{sub.diff|div:60|floatformat:0}} د و {{sub.counter}} محاولات )
+                  {% elif sub.result < 100 and sub.result >= 90 %}
+               <td bgcolor="#89e982" style="border:1px solid black; color: black;text-align: center;">النتيجة: {{sub.result}}
+                  (في {{sub.diff|div:60|floatformat:0}} د و {{sub.counter}} محاولات )
+                  {% elif sub.result < 90 and sub.result >= 80 %}
+               <td bgcolor="#bcedb8" style="border:1px solid black; color: black;text-align: center;">النتيجة: {{sub.result}}
+                  (في {{sub.diff|div:60|floatformat:0}} د و {{sub.counter}} محاولات )
+                  {% elif sub.result < 80 and sub.result >= 70 %}
+               <td bgcolor="#ddf6db" style="border:1px solid black; color: black;text-align: center;">النتيجة: {{sub.result}}
+                  (في {{sub.diff|div:60|floatformat:0}} د و {{sub.counter}} محاولات )
+                  {% elif sub.result < 70 and sub.result >= 60 %}
+               <td bgcolor="#f4fff3" style="border:1px solid black; color: black;text-align: center;">النتيجة: {{sub.result}}
+                  (في {{sub.diff|div:60|floatformat:0}} د و {{sub.counter}} محاولات )
+                  {% elif sub.result < 60 and sub.counter >= 1 %}
+               <td bgcolor="#ffeba0" style="border:1px solid black; color: black;text-align: center;">النتيجة: {{sub.result}}
+                  (في {{sub.diff|div:60|floatformat:0}} د و {{sub.counter}} محاولات )
+                  {% elif sub.status == 3 %}
+               <td bgcolor = "#f6ccd0" style="border:1px solid black; color: black;text-align: center;">Error
+                  {% else %}
+               <td style="border:1px solid black; color: black;text-align: center;"> -
+               </td>
+               {% endif %}
+               {%endfor%}   
+               {%endif%} 
+            </tr>
+            {%endfor%}
+         </table>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+<script>
+   function makeTimer() {
+      var endTime= new Date({{ event.end_date|date:"U" }} * 1000);
+       endTime = (Date.parse(endTime) / 1000);
+   
+           var now = new Date();
+           now = (Date.parse(now) / 1000);
+   
+           var timeLeft = endTime - now;
+   
+           if (timeLeft<0) {
+               $("#countdown").html("انتهي الوقت"); 
+               return;
+           }
+           var days = Math.floor(timeLeft / 86400);
+           var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
+           var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
+           var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
+   
+           if (hours < "10") { hours = "0" + hours; }
+           if (minutes < "10") { minutes = "0" + minutes; }
+           if (seconds < "10") { seconds = "0" + seconds; }
+           if (seconds )
+           var string = "";
+           if (days>=1) string = "الوقت المتبقي : " + days + "d "+ hours + "h:" + minutes + "m:" + seconds + "s";
+           else string = "الوقت المتبقي : " + hours + "h:" + minutes + "m:" + seconds + "s";
+   
+           $("#countdown").html(string);
+   }    
+   setInterval(function() { makeTimer(); }, 1000);
+   window.setTimeout(function () {
+       location.href = '/scoreboard/' + {{event.id }};
+   }, 60000); // refresh/redirect.
+</script>
+{% endblock javascripts %}

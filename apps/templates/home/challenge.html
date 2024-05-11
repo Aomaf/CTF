@@ -1,0 +1,191 @@
+{% extends "layouts/base.html" %}
+{% block title %} Challenge {% endblock %}
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+   .success {
+   padding: 20px;
+   background-color: #4caf50;
+   color: white;
+   }
+   .alert {
+   padding: 20px;
+   background-color: #f44336;
+   color: white;
+   }
+   .closebtn {
+   margin-left: 15px;
+   color: white;
+   font-weight: bold;
+   float: right;
+   font-size: 22px;
+   line-height: 20px;
+   cursor: pointer;
+   transition: 0.3s;
+   }
+   .closebtn:hover {
+   color: black;
+   }
+   .css-901oao {
+   border: 0 solid black;
+   box-sizing: border-box;
+   color: rgba(0, 0, 0, 1.00);
+   display: inline;
+   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+   margin-bottom: 0px;
+   margin-left: 0px;
+   margin-right: 0px;
+   margin-top: 0px;
+   padding-bottom: 0px;
+   padding-left: 0px;
+   padding-right: 0px;
+   padding-top: 0px;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="row">
+   {% if disableCh != True %}
+   <div class="alert" style="margin-right: 1px; width: fit-content; display: inline-block;">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      على المشارك ضرورة قراءة خطوات المشاركة ورفع الحلول على الرابط التالي:
+      <a class="font-weight-bold nav-link page-scroll" href="/#page-howtouse" style="color: white; text-decoration: underline; display: inline">خطوات المشاركة</a>
+   </div>
+</div>
+<div class="row">
+   {% endif %}
+   {% if group != None %}
+   <div class="success" style="margin-right: 1px; width: fit-content; display: inline-block;">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      عند رفع اي حل سوف يحسب بأسم المجموعة {{group.name}}
+   </div>
+   {%endif%}
+</div>
+{% if ch.level == 'Level 2' and disableCh == True %}
+<div class="alert" style="margin-right: 1px; width: fit-content; display: inline-block;">
+   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+   <strong>للمشاركة</strong> يجب اجتياز تحدي من المستوى الأول بعلامة كاملة
+</div>
+{% elif ch.level == 'Level 3' and disableCh == True %}
+<div class="alert" style="margin-right: 1px; width: fit-content; display: inline-block;">
+   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+   <strong>للمشاركة</strong> يجب اجتياز تحدي من المستوى الثاني بعلامة كاملة
+</div>
+{% elif ch.level == 'Level 4' and disableCh == True %}
+<div class="alert" style="margin-right: 1px; width: fit-content; display: inline-block;">
+   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+   <strong>للمشاركة</strong> يجب اجتياز تحدي من المستوى الثالث بعلامة كاملة
+</div>
+{% elif ch.level == 'Level 5' and disableCh == True %}
+<div class="alert" style="margin-right: 1px; width: fit-content; display: inline-block;">
+   <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+   <strong>للمشاركة</strong> يجب اجتياز تحدي من المستوى الرابع بعلامة كاملة
+</div>
+{% endif %}
+<div class="card">
+   <div class="card-header">
+      {% if ch.belongsToEvent%}
+      <h5>{{ch.title|truncatechars:100}} @ {{ch.belongsToEvent.title}} </h5>
+      {% else %}
+      <h5>{{ch.level}} | {{ch.title|truncatechars:100}}</h5>
+      {% endif %}
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-12">
+            {% if ch.level %}
+            <div class="card-body">
+               <h5>صعوبة التحدي</h5>
+               <label>{{ch.level}}</label>
+            </div>
+            {% endif %}
+            {% if ch.type %}
+            <div class="card-body">
+               <h5>نوع التحدي</h5>
+               <label>{{ch.type}}</label>
+            </div>
+            {% endif %}
+            {% if ch.description %}
+            <div class="card-body">
+               <h4>وصف التحدي</h4>
+               {% if ch.alignment == 0 %}
+               <span class = "css-901oao" >{{ch.description|safe}}</span>
+               {% else %}
+               <span class = "css-901oao" style="float: left; text-align:left; direction: ltr;">{{ch.description|safe}}</span>
+               {% endif %}
+            </div>
+            {% endif %}
+            {% if ch.attachment %}
+            <div class="card-body">
+               <img src="/static/assets/images/{{ch.attachment}}"  width="{{ ch.width }}" height="{{ ch.height }}">
+            </div>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-12">
+            <form method="POST" enctype="multipart/form-data">
+               {% csrf_token %}
+               {% if disableCh != True or user.is_superuser or user.is_staff %}
+               <div class="card-body">
+                  <div class="form-group">
+                     <h5>مشاركة الحل</h5>
+                     <br>
+                     {% if ch.belongsToEvent.is_hackathon == True %}
+                     <div class="form-group">
+                        <textarea type="text" class="form-control" name="solve" rows="2"></textarea>
+                        <br>
+                     </div>
+                     <div>
+                        <button href="{% url 'submissions' %}" class="btn btn-success">إرسال</button>
+                        <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+                     </div>
+                     {% else %}
+                     <div class="form-group">
+                        <select class="form-control" name="language" id='selected_language' onChange="enableButtons()">
+                           <option value="null" select> اختر لغة البرمجة </option>
+                           {% if allowJava == True %}
+                           <option value="Java">Java</option>
+                           {%endif%}
+                           {% if allowPy == True %}
+                           <option value="Python">Python</option>
+                           {%endif%}
+                           {% if allowCpp == True %}
+                           <option value="Cpp">++C</option>
+                           {%endif%}
+                        </select>
+                        <div class="tab-pane fade show active" id="AsFile" role="tabpanel" aria-labelledby="AsFile-tab">
+                           <input type="file" name="myfile" id="file_button" disabled><br><br></input>
+                        </div>
+                     </div>
+                     <div>
+                        <button href="{% url 'submissions' %}" class="btn btn-success" id="submit_button" disabled>إرسال</button>
+                        <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+                     </div>
+                     {% endif %}
+                  </div>
+                  {% endif %}
+               </div>
+            </form>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+<script>
+   function enableButtons() {
+       if(document.getElementById("selected_language").value!="null") {
+           document.getElementById("file_button").disabled=false;
+           document.getElementById("submit_button").disabled=false;
+       } else {
+           document.getElementById("file_button").disabled=true;
+           document.getElementById("submit_button").disabled=true;
+       }
+   }
+</script>
+{% endblock javascripts %}

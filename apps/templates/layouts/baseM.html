@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" style="overflow-y: scroll;">
+<head>
+    <title>
+        QuPc - {% block title %}{% endblock %}
+    </title>
+    <link href="/static/assets/css/styleMain.css" rel="stylesheet" />
+    <link href="/static/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/assets/css/rtl.css">
+	
+    <script defer src="/static/assets/js/jquery-3.5.0.min.js"></script> <!-- For contestants listing in dashboard -->
+    <script defer src="/static/assets/js/bootstrap.min.js"></script> <!-- For contestants listing in dashboard -->
+	<script defer src="/static/assets/js/scripts.js"></script>
+
+    <script src="https://cdn.tiny.cloud/1/sqp7auyzy2yt2znhs81kx5od9rn7242i6pmi6wv2cnii5hs1/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+    tinymce.init({
+        selector: '#tinymcetextarea',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount directionality',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | ltr rtl',
+    });
+    </script>
+
+    <style>
+        .bottom-four {
+           margin-bottom: 4cm;
+        }
+        @font-face {
+            font-family: rabar;
+            src: url("/static/assets/fonts/fontawesome/webfonts/rabar.ttf");
+        }
+        div {
+            font-family: rabar;
+        }
+    </style>
+    <!-- Specific CSS goes HERE -->
+    {% block stylesheets %}{% endblock stylesheets %}
+</head>
+
+<body>
+    
+    <!-- Top Bar -->
+    {% include 'includes/navigationM.html' %}
+    
+     <div class="ptb-100">
+        {% block content %}
+
+        {% endblock content %}
+    </div>
+
+    {% include 'includes/scripts.html' %}
+
+    <!-- Specific Page JS goes HERE  -->
+    {% block javascripts %}{% endblock javascripts %}
+
+</body>
+
+</html>

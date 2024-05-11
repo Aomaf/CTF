@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+{% block title %} Contestants {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5>المشاركون</h5>
+   </div>
+   <div class="card-body">
+      {% if contestants and contestants|length >= 1 %}
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <thead>
+               <tr>
+                  <th>اسم المتسابق</th>
+                  <th>العنوان البريدي</th>
+                  <th>عدد المشاركات</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody>
+               {% for x in contestants %}
+               <tr>
+                  <td>{{x.user_nameF}} {{x.user_nameM}} {{x.user_nameM2}} {{x.user_nameL}}</td>
+                  <td>{{x.email}}</td>
+                  <td>{{x.submissions}}</td>
+                  <td>
+                     {% if user.is_superuser or user.is_staff %}
+                     <a href="{% url 'contestant' x.id %}" class="btn btn-info">المرفوعات</a>
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+            </tbody>
+         </table>
+      </div>
+      {% else %}
+      <center>
+         <span class="d-block m-t-5"><code>لا يوجد متسابقين</code></span>
+      </center>
+      {% endif %}
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

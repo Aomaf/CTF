@@ -1,0 +1,124 @@
+{% extends "layouts/base.html" %}
+{% block title %} Competition result {% endblock %}
+{% block stylesheets %}
+{% endblock stylesheets %}
+{% block content %}
+<div class="card">
+   <div class="card-header">
+      <h5>التحدي : {{ch.title}} @ {{ch.belongsToEvent.title}}</h5>
+   </div>
+   <div class="card-header">
+      <h5>ترتيب المتسابقين</h5>
+   </div>
+   {% if submissions|length <= 0 %}
+   <div class="text-danger">
+      <center>لا يوجد مشاركات</center>
+   </div>
+   {% else %}
+   <div class="card-body">
+      <table class="table table-hover">
+         <thead>
+            <tr>
+               <th>الترتيب</th>
+               <th>اسم المشارك او المجموعة</th>
+               {% if user.is_superuser or user.is_staff%}
+               <th>النقاط</th>
+               <th>المرفوعات</th>
+               {%endif%}
+            </tr>
+         </thead>
+         {% for x in submissions %}
+         <tbody>
+            {% if x.sum_result >= 0 %}
+            <tr>
+               <th scope="row">{{forloop.counter}}</th>
+               {% if x.challenge.belongsToEvent and x.group%}
+               <td>{{x.group.name}}</td>
+               {%else%}
+               <td>
+                  {%if x.contestant.user_nameF != None%}
+                  {{x.contestant.user_nameF}}
+                  {% endif %}
+                  {%if x.contestant.user_nameM != None%}
+                  {{x.contestant.user_nameM}}
+                  {% endif %}
+                  {%if x.contestant.user_nameM2 != None%}
+                  {{x.contestant.user_nameM2}}
+                  {% endif %}
+                  {%if x.contestant.user_nameL != None%}
+                  {{x.contestant.user_nameL}}
+                  {% endif %}
+               </td>
+               {%endif%}
+               {% if user.is_superuser or user.is_staff%}
+               <td>{{x.sum_result|floatformat:"2"}}</td>
+               <td>
+                  {% if x.filepath %}
+                  <a href="{% url 'file' x.id %}" class="btn btn-info">الحل</a>
+                  {%endif%}
+               </td>
+               {%endif%}
+            </tr>
+            {% endif %}
+         </tbody>
+         {% endfor %}
+      </table>
+   </div>
+   {% endif %}
+</div>
+
+{% if user.is_superuser or user.is_staff%}
+<div class="card">
+   <div class="card-header">
+      <h5>الحلول الغير صحيحة</h5>
+   </div>
+   {% if badSubmissions|length <= 0 %}
+   <div class="text-danger">
+      <center>لا يوجد مشاركات</center>
+   </div>
+   {% else %}
+   <div class="card-body">
+      <table class="table table-hover">
+         <thead>
+            <tr>
+               <th>الترتيب</th>
+               <th>الاسم</th>
+               <td>الرسالة</td>
+               <th>المرفوعات</th>
+            </tr>
+         </thead>
+         <tbody>
+            {% for x in badSubmissions %}
+            <tr>
+               <th scope="row">{{forloop.counter}}</th>
+               <td>
+                  {%if x.contestant.user_nameF != None%}
+                  {{x.contestant.user_nameF}}
+                  {% endif %}
+                  {%if x.contestant.user_nameM != None%}
+                  {{x.contestant.user_nameM}}
+                  {% endif %}
+                  {%if x.contestant.user_nameM2 != None%}
+                  {{x.contestant.user_nameM2}}
+                  {% endif %}
+                  {%if x.contestant.user_nameL != None%}
+                  {{x.contestant.user_nameL}}
+                  {% endif %}
+               </td>
+               <td>{{x.note}}</td>
+               <td>
+                  {% if x.filepath %}
+                  <a href="{% url 'file' x.id %}" class="btn btn-info">الحل</a>
+                  {%endif%}
+               </td>
+            </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+   </div>
+   {% endif %}
+</div>
+{% endif %}
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

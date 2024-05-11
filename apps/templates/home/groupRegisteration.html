@@ -1,0 +1,145 @@
+{% extends "layouts/base.html" %}
+{% block title %} Register group {% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<style>
+   .alert {
+   padding: 20px;
+   background-color: #f44336;
+   color: white;
+   }
+   .success {
+   padding: 20px;
+   background-color: #4caf50;
+   color: white;
+   }
+   .closebtn {
+   margin-left: 15px;
+   color: white;
+   font-weight: bold;
+   float: right;
+   font-size: 22px;
+   line-height: 20px;
+   cursor: pointer;
+   transition: 0.3s;
+   }
+   .closebtn:hover {
+   color: black;
+   }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="row">
+   <div class="alert" style="margin-right: 1px; width: fit-content; display: inline-block;">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      <strong>عند انشاء مجموعة جديدة، سيتم اضافتك إليها تلقائيا</strong>
+   </div>
+</div>
+<div class="row">
+   <div class="alert" id="alert" style="margin-right: 1px; width: fit-content; display: inline-block; visibility: hidden;">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      لا يمكن تسجيل اكثر من خمسة اعضاء بالاضافة لك
+   </div>
+</div>
+<div class="row">
+   {% if disable == True %}
+   <div class="success" style="margin-right: 1px; width: fit-content; display: inline-block;">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      انت مسجل مسبقا في المجموعة {{name}}
+   </div>
+   {% endif %}
+</div>
+<div class="card">
+   <div class="card-header">
+      <h5>إنشاء مجموعة للحدث ({{competition.title}})</h5>
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            {% if disable == True %}
+            <form method="POST" enctype="multipart/form-data" id = "mainForm">
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">رجوع</button>
+               {% else %}
+            <form method="POST" enctype="multipart/form-data" id = "mainForm">
+               {% csrf_token %}
+               <div class="form-group">
+                  <label>إسم المجموعة</label>
+                  {%if exists == True%}
+                  <div style="color:rgba(255, 0, 0, 0.8);">
+                     <input type="text" class="form-control" name="name" style="">اسم المجموعة {{name}} مسجلا مسبقا، ارجو اختيار اسم اخر</input>
+                  </div>
+                  {% else %}	
+                  <input type="text" class="form-control" name="name"></input>
+                  {% endif %}
+               </div>
+               <div class="form-group">
+                  <label>اضافة عضو بالعنوان البريدي</label>
+                  <table>
+                     <tr>
+                        <td><input type="text" class="form-control" name="email" id="email_autocomplete" size="30"></td>
+                        <td><button type="button" name="add" id = "addingButton" class="btn btn-success" onclick='addNewMember()'>إضافة</button></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="form-group" id="container">
+                  <table id="members">
+                  </table>
+               </div>
+               <button href="{% url 'groupRegisteration' competition.id %}" type="submit" name="submit" class="btn btn-success">تسجيل</button>
+               <button type="button" class="btn btn-warning" value="Previous Page" onClick="javascript:history.go(-1);">إلغاء</button>
+            </form>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<script>
+   var max = 5;
+   var n = 1;
+   
+   $(function() {
+   	$("#email_autocomplete").autocomplete({
+   		source: "{% url 'getMember' %}",
+   		minLength: 3,
+   	  });
+   });
+   
+   function addNewMember() {
+   	var email = document.getElementById("email_autocomplete").value;
+   	var input = document.createElement("input");
+   	input.setAttribute('type', 'hidden');
+   	input.setAttribute("name", "member" + n);
+   	input.setAttribute("id", "memberid" + n);
+   	input.setAttribute("value", email);
+   	var parent = document.getElementById("container");
+   	parent.appendChild(input);
+   
+   	$("#members").append(
+   		"<tr>" + 
+   			"<td><input type='text' size='28' style='float:left;text-align:left;direction:ltr;height:44px;font-size:14pt;' name='member"+ n + "' value ='" + email + "' disabled></input></td>"+
+   			"<td><button type='button' class='btn btn-warning' value='delete row' onclick='deleteRow(this," + n + ")'>حذف</button></td>"+
+   		"</tr>"
+   	);
+   	document.getElementById("email_autocomplete").value= "";
+   	n = n + 1;
+   	if(n >= max) {
+   		document.getElementById("addingButton").disabled = true;
+   		document.getElementById("alert").style.visibility = 'visible';
+   	}
+   }
+   
+   function deleteRow(r,index) {
+   	var i = r.parentNode.parentNode.rowIndex;
+   	//var tar = document.getElementById('member' + index);
+   	//tar.remove();	
+   	document.getElementById("members").deleteRow(i);
+   	document.getElementById("alert").style.visibility = 'hidden';
+   	document.getElementById("addingButton").disabled = false;
+   	document.getElementById("memberid" + index).remove();
+   	max = max + 1;
+   }
+</script>
+{% endblock javascripts %}

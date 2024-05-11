@@ -1,0 +1,353 @@
+{% extends "layouts/base.html" %}
+{% block title %} اللوحة الرئيسية {% endblock %}
+{% block stylesheets %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<style>
+   /* scrolltable rules */
+   table {
+   margin-top: 0px;
+   display: inline-block;
+   overflow: auto;
+   /*text-align: center;*/
+   }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div>
+   <div class="card-header">
+      <h6>ترتيب المشاركين</h6>
+   </div>
+   <ul class="nav nav-tabs" id="myTab" role="tablist">
+      <li class="nav-item">
+         <a class="nav-link text-uppercase" id="Level1-tab" data-toggle="tab" href="#Level1" role="tab" aria-controls="Level1" aria-selected="false">المستوى الأول</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link text-uppercase" id="Level2-tab" data-toggle="tab" href="#Level2" role="tab" aria-controls="Level2" aria-selected="false">المستوى الثاني</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link text-uppercase" id="Level3-tab" data-toggle="tab" href="#Level3" role="tab" aria-controls="Level3" aria-selected="false">المستوى الثالث</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link text-uppercase" id="Level4-tab" data-toggle="tab" href="#Level4" role="tab" aria-controls="Level4" aria-selected="false">المستوى الرابع</a>
+      </li>
+      <li class="nav-item">
+         <a class="nav-link text-uppercase" id="Level5-tab" data-toggle="tab" href="#Level5" role="tab" aria-controls="Level5" aria-selected="false">المستوى الخامس</a>
+      </li>
+   </ul>
+   <div class="tab-content" id="myTabContent">
+      <div class="tab-pane fade" id="Level1" role="tabpanel" aria-labelledby="Level1-tab">
+         <div class="table-responsive">
+            {% if users1|length <= 0 %} 
+            <div class="text-danger">
+               <span class="d-block m-t-5">لا يوجد مشاركين</span>
+            </div>
+            {% else %}
+            <table class="table" style="height: 200px" cellspacing="1" cellpadding="1" border="0">
+               <thead>
+                  <tr>
+                     <th style="width:10%;">الترتيب</th>
+                     <th style="width:50%;">الاسم</th>
+                     {% if user.is_superuser or user.is_staff%}
+                     <th style="width:10%;">النقاط</th>
+                     {% endif %}
+                  </tr>
+               </thead>
+               {% for x in users1 %}
+               <tbody>
+                  <tr>
+                     <th scope="row">{{forloop.counter}}</th>
+                     <td>
+                        {%if x.user_nameF != None%}
+                        {{x.user_nameF}}
+                        {% endif %}
+                        {%if x.user_nameM != None%}
+                        {{x.user_nameM}}
+                        {% endif %}
+                        {%if x.user_nameM2 != None%}
+                        {{x.user_nameM2}}
+                        {% endif %}
+                        {%if x.user_nameL != None%}
+                        {{x.user_nameL}}
+                        {% endif %}
+                     </td>
+                     {% if user.is_superuser or user.is_staff%}
+                     <td>{{x.user_scoreL1|floatformat:"2"}}</td>
+                     {% endif %}
+                  </tr>
+               </tbody>
+               {% endfor %}
+            </table>
+            {% endif %}
+         </div>
+      </div>
+      <div class="tab-pane fade" id="Level2" role="tabpanel" aria-labelledby="Level2-tab">
+         <div class="table-responsive">
+            {% if users2|length <= 0 %}
+            <div class="text-danger">
+               <span class="d-block m-t-5">لا يوجد مشاركين</span>
+            </div>
+            {% else %}
+            <table class="table" style="height: 200px" cellspacing="1" cellpadding="1" border="0">
+               <thead>
+                  <tr>
+                     <th style="width:10%;">الترتيب</th>
+                     <th style="width:50%;">الاسم</th>
+                     {% if user.is_superuser or user.is_staff%}
+                     <th style="width:10%;">النقاط</th>
+                     {% endif %}
+                  </tr>
+               </thead>
+               {% for x in users2 %}
+               <tbody>
+                  <tr>
+                     <th scope="row">{{forloop.counter}}</th>
+                     <td>
+                        {%if x.user_nameF != None%}
+                        {{x.user_nameF}}
+                        {% endif %}
+                        {%if x.user_nameM != None%}
+                        {{x.user_nameM}}
+                        {% endif %}
+                        {%if x.user_nameM2 != None%}
+                        {{x.user_nameM2}}
+                        {% endif %}
+                        {%if x.user_nameL != None%}
+                        {{x.user_nameL}}
+                        {% endif %}
+                     </td>
+                     {% if user.is_superuser or user.is_staff%}
+                     <td>{{x.user_scoreL1|floatformat:"2"}}</td>
+                     {% endif %}
+                  </tr>
+               </tbody>
+               {% endfor %}
+            </table>
+            {% endif %}
+         </div>
+      </div>
+      <div class="tab-pane fade" id="Level3" role="tabpanel" aria-labelledby="Level3-tab">
+         <div class="table-responsive">
+            {% if users3|length <= 0 %} 
+            <div class="text-danger">
+               <span class="d-block m-t-5">لا يوجد مشاركين</span>
+            </div>
+            {% else %}
+            <table class="table" style="height: 200px" cellspacing="1" cellpadding="1" border="0">
+               <thead>
+                  <tr>
+                     <th style="width:10%;">الترتيب</th>
+                     <th style="width:50%;">الاسم</th>
+                     {% if user.is_superuser or user.is_staff%}
+                     <th style="width:10%;">النقاط</th>
+                     {% endif %}
+                  </tr>
+               </thead>
+               {% for x in users3 %}
+               <tbody>
+                  <tr>
+                     <th scope="row">{{forloop.counter}}</th>
+                     <td>
+                        {%if x.user_nameF != None%}
+                        {{x.user_nameF}}
+                        {% endif %}
+                        {%if x.user_nameM != None%}
+                        {{x.user_nameM}}
+                        {% endif %}
+                        {%if x.user_nameM2 != None%}
+                        {{x.user_nameM2}}
+                        {% endif %}
+                        {%if x.user_nameL != None%}
+                        {{x.user_nameL}}
+                        {% endif %}
+                     </td>
+                     {% if user.is_superuser or user.is_staff%}
+                     <td>{{x.user_scoreL1|floatformat:"2"}}</td>
+                     {% endif %}
+                  </tr>
+               </tbody>
+               {% endfor %}
+            </table>
+            {% endif %}
+         </div>
+      </div>
+      <div class="tab-pane fade" id="Level4" role="tabpanel" aria-labelledby="Level4-tab">
+         <div class="table-responsive">
+            {% if users4|length <= 0 %} 
+            <div class="text-danger">
+               <span class="d-block m-t-5">لا يوجد مشاركين</span>
+            </div>
+            {% else %}
+            <table class="table" style="height: 200px" cellspacing="1" cellpadding="1" border="0">
+               <thead>
+                  <tr>
+                     <th style="width:10%;">الترتيب</th>
+                     <th style="width:50%;">الاسم</th>
+                     {% if user.is_superuser or user.is_staff%}
+                     <th style="width:10%;">النقاط</th>
+                     {% endif %}
+                  </tr>
+               </thead>
+               {% for x in users4 %}
+               <tbody>
+                  <tr>
+                     <th scope="row">{{forloop.counter}}</th>
+                     <td>
+                        {%if x.user_nameF != None%}
+                        {{x.user_nameF}}
+                        {% endif %}
+                        {%if x.user_nameM != None%}
+                        {{x.user_nameM}}
+                        {% endif %}
+                        {%if x.user_nameM2 != None%}
+                        {{x.user_nameM2}}
+                        {% endif %}
+                        {%if x.user_nameL != None%}
+                        {{x.user_nameL}}
+                        {% endif %}
+                     </td>
+                     {% if user.is_superuser or user.is_staff%}
+                     <td>{{x.user_scoreL1|floatformat:"2"}}</td>
+                     {% endif %}
+                  </tr>
+               </tbody>
+               {% endfor %}
+            </table>
+            {% endif %}
+         </div>
+      </div>
+      <div class="tab-pane fade" id="Level5" role="tabpanel" aria-labelledby="Level5-tab">
+         <div class="table-responsive">
+            {% if users5|length <= 0 %}
+            <div class="text-danger">
+               <span class="d-block m-t-5">لا يوجد مشاركين</span>
+            </div>
+            {% else %}
+            <table class="table" style="height: 200px" cellspacing="1" cellpadding="1" border="0">
+               <thead>
+                  <tr>
+                     <th style="width:10%;">الترتيب</th>
+                     <th style="width:50%;">الاسم</th>
+                     {% if user.is_superuser or user.is_staff%}
+                     <th style="width:10%;">النقاط</th>
+                     {% endif %}
+                  </tr>
+               </thead>
+               {% for x in users5 %}
+               <tbody>
+                  <tr>
+                     <th scope="row">{{forloop.counter}}</th>
+                     <td>
+                        {%if x.user_nameF != None%}
+                        {{x.user_nameF}}
+                        {% endif %}
+                        {%if x.user_nameM != None%}
+                        {{x.user_nameM}}
+                        {% endif %}
+                        {%if x.user_nameM2 != None%}
+                        {{x.user_nameM2}}
+                        {% endif %}
+                        {%if x.user_nameL != None%}
+                        {{x.user_nameL}}
+                        {% endif %}
+                     </td>
+                     {% if user.is_superuser or user.is_staff%}
+                     <td>{{x.user_scoreL1|floatformat:"2"}}</td>
+                     {% endif %}
+                  </tr>
+               </tbody>
+               {% endfor %}
+            </table>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+</div>
+<div>
+   <div class="row">
+      <div class="col-md-6">
+         <div class="card Recent-Users">
+            <div class="card-body">
+               <h6>شخصي</h6>
+            </div>
+            <div class="card-body">
+               <div><label>المحاولات : {{params_user.user_attempts.sum}}</label></div>
+               <div><label>المشاركات الصحيحة : {{params_user.user_submits}}</label></div>
+               <div><label>اجتياز : {{params_user.user_passed}}</label></div>
+               <div><label>درجة كاملة : {{params_user.user_hundreds}}</label></div>
+            </div>
+            <canvas id="myChart1" style="width:100%;max-width:100%"></canvas>
+            <script>
+               var xValues = ['', "60-69", "70-79", "80-89", "90-99", "100"];
+               var yValues = [0, {{params_user.user_sixtys}},{{params_user.user_seventys}},{{params_user.user_eightys}},{{params_user.user_ninetys}},{{params_user.user_hundreds}}];
+               var barColors = [
+                   "#000000",
+                   "#EDBB99",
+                   "#F8C471",
+                   "#F4D03F",
+                   "#A9DFBF",
+                   "#82E0AA"
+               ];
+               var scale = {{max}}
+               new Chart("myChart1", {
+                   type: "bar",
+                   data: {
+                       labels: xValues,
+                       datasets: [{
+                           backgroundColor: barColors,
+                           data: yValues
+                       }]
+                   },
+                   options: {
+                       legend: { display: false },
+                       scales: {
+                           yAxes: [{
+                               ticks: {
+                                   beginAtZero: true,
+                                   callback: function(value) {if (value % 1 === 0) {return value;}},
+                                   max: scale
+                               }
+                           }]
+                       }
+                   }
+               });
+            </script>
+         </div>
+      </div>
+      <div class="col-md-6">
+         <div class="card Recent-Users">
+            <div class="card-body">
+               <h6>عام</h6>
+               <div><label>عمليات الإرسال : {{params_general.all_submits}}</label></div>
+               <div><label>إجتاز : {{params_general.all_solutions}}</label></div>
+            </div>
+            <canvas id="myChart" style="width:100%;max-width:100%"></canvas>
+            <script>
+               var xValues = [" |  60-69", " |  70-79", " |  80-89", " |  90-99", "100"];
+               var yValues = [{{params_general.sixtys}},{{params_general.seventys}},{{params_general.eightys}},{{params_general.ninetys}},{{params_general.hundreds}}];
+               var barColors = [
+                   "#EDBB99",
+                   "#F8C471",
+                   "#F4D03F",
+                   "#A9DFBF",
+                   "#82E0AA"
+               ];
+               
+               new Chart("myChart", {
+                   type: "pie",
+                   data: {
+                       labels: xValues,
+                       datasets: [{
+                           backgroundColor: barColors,
+                           data: yValues
+                       }]
+                   }
+               });
+            </script>
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}

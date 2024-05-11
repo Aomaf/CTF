@@ -1,0 +1,151 @@
+{% extends "layouts/base.html" %}
+{% block title %} Competition {% endblock %}
+{% block stylesheets %}
+<style>
+   .success {
+   padding: 20px;
+   background-color: #4caf50;
+   color: white;
+   }
+   .closebtn {
+   margin-left: 15px;
+   color: white;
+   font-weight: bold;
+   float: right;
+   font-size: 22px;
+   line-height: 20px;
+   cursor: pointer;
+   transition: 0.3s;
+   }
+   .closebtn:hover {
+   color: black;
+   }
+   .css-901oao {
+   border: 0 solid black;
+   box-sizing: border-box;
+   color: rgba(0, 0, 0, 1.00);
+   display: inline;
+   font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+   margin-bottom: 0px;
+   margin-left: 0px;
+   margin-right: 0px;
+   margin-top: 0px;
+   padding-bottom: 0px;
+   padding-left: 0px;
+   padding-right: 0px;
+   padding-top: 0px;
+   white-space: pre-wrap;
+   word-wrap: break-word;
+   }
+</style>
+{% endblock stylesheets %}
+{% block content %}
+<div class="row">
+   {% if group != None %}
+   <div class="success" style="width: fit-content; display: inline-block;">
+      <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+      تم تسجيلك في هذه المسابقة في المجموعة {{group.name}}
+   </div>
+   {%endif%}
+</div>
+<div class="card">
+   <div class="card-header">
+      {% if event.title%}
+      <h3>{{event.title}} ({% if event.is_hackathon%} هاكاثون {% else %} مسابقة {%endif%})</h3>
+      {% endif %}
+   </div>
+   <div class="card-body">
+      <div class="row">
+         <div class="col-md-9">
+            {% if event.description%}
+            {% if event.alignment == 0 %}
+            <span class = "css-901oao">{{event.description|safe}}</span>
+            {% else %}
+            <span class = "css-901oao" style="float: left; text-align:left; direction: ltr;">{{event.description|safe}}</span>
+            {% endif %}
+            {% endif %}
+         </div>
+      </div>
+      <div class="row">
+         <div class="col-md-9">
+            <h4>عن المسابقة:</h4>
+            <h6><li>مجموع التحديات المصاحبة : {{challenges|length}} </li></h6>
+            <h6><li>المجموعات المشاركة : {{groups|length}} </li></h6>
+            <h6><li>الحلول المرفوعة : {{totalSubmissions}}</li></h6>
+            <h6><li>الحلول المجتازة : {{totalPassed}}</li></h6>
+            {% if currentTime >= event.start_date and currentTime < event.end_date%}
+            <h5></h5>
+            <a href="{% url 'scoreboard' eID=event.id %}" class="btn btn-info">لوحة النتائج</a>
+            {% elif user.is_superuser or user.is_staff %}
+            <h5></h5>
+            <a href="{% url 'scoreboard' eID=event.id %}" class="btn btn-info">لوحة النتائج</a>
+            {% endif %}
+         </div>
+      </div>
+   </div>
+
+   <div class="card-body">
+      {% if event.start_date <= currentTime or user.is_superuser or user.is_staff %}
+      <h5>التحديات المصاحبة</h5>
+      <div class="table-responsive">
+         <table class="table table-hover">
+            <tbody>
+               {% if challenges|length >= 1 %}
+               {% for x in challenges %}
+               <tr>
+                  <td>
+                     {% if x.belongsToEvent.is_hackathon == 1%}
+                     <img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/H.png" alt="activity-user">
+                     {% else %}
+                     <img class="rounded-circle" style="width:40px;" src="/static/assets/images/user/C.png" alt="activity-user">
+                     {% endif %}
+                  </td>
+                  <td>
+                     <h6 class="mb-1" style="width:400px;">{{x.title|truncatechars:50}}</h6>
+                  </td>
+                  <td>
+                     <h6 class="text-muted"></h6>
+                     <h6 class="text-muted"><li>البداية : {{x.start_date}}</li></h6>
+                     <h6 class="text-muted"><li>النهاية : {{x.end_date}}</li></h6>
+                     <h6 class="text-muted"><li>مرسل / إجتاز : {{x.passed}}<code>/</code>{{x.submissions}}</li></h6>
+                  </td>
+                  <td align="left">
+                     {% if user.is_superuser or user.is_staff %}
+                     <a href="{% url 'challenge' x.id %}" class="btn btn-info">عرض</a>
+                     <a href="{% url 'editChallenge' x.id %}" class="btn btn-info">تعديل</a>
+                     <a href="{% url 'challengeResult' x.id %}" class="btn btn-info">النتائج</a>
+                     <h6 class="text-muted"></h6>
+                     {% if x.filepath %}
+                     <a href="{% url 'viewMainFile' cID=x.id target='Java' %}" class="btn btn-info">Java</a>
+                     {%endif%}
+                     {% if x.filepathPy %}
+                     <a href="{% url 'viewMainFile' cID=x.id target='Python' %}" class="btn btn-info">Python</a>
+                     {%endif%}
+                     {% if x.filepathCpp %}
+                     <a href="{% url 'viewMainFile' cID=x.id target='Cpp' %}" class="btn btn-info">Cpp</a>
+                     {%endif%}
+                     {% elif currentTime >= x.end_date %}
+                     <a href="{% url 'challenge' x.id %}" class="btn btn-info">عرض</a>
+                     <a href="{% url 'challengeResult' x.id %}" class="btn btn-info">النتائج</a>
+                     {% elif currentTime >= x.start_date %}
+                     <a href="{% url 'challenge' x.id %}" class="btn btn-info">عرض</a>
+                     {% endif %}
+                  </td>
+               </tr>
+               {% endfor %}
+               {% else %}
+               <div class="text-danger">
+                  <strong>
+                     <center>لا يوجد تحديات مرفوعة</center>
+                  </strong>
+               </div>
+               {% endif%}
+            </tbody>
+         </table>
+      </div>
+      {% endif %}
+   </div>
+</div>
+{% endblock content %}
+{% block javascripts %}
+{% endblock javascripts %}
